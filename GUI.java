@@ -1,7 +1,6 @@
-package teamProject;
+package src;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -11,6 +10,11 @@ import java.awt.event.ActionEvent;
 import javax.swing.WindowConstants;
 import javax.swing.JPanel;
 
+/**
+ * Represents the Graphical User Interface for the wikipedia project.
+ *
+ * @author Mohamad Hajj + Austin Fashimpaur
+ */
 public class GUI {
 
 	private JFrame frame;
@@ -46,10 +50,10 @@ public class GUI {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 600, 350);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		JPanel panel = new JPanel();
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
-		
+
 		JButton btnNewButton = new JButton("Run");
 		btnNewButton.setFocusPainted(false);
 		btnNewButton.setBounds(386, 154, 60, 30);
