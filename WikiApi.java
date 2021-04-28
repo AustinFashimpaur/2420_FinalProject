@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import edu.princeton.cs.algs4.Out;
+import edu.princeton.cs.algs4.SymbolGraph;
+
 /**
  * REQUIRED DEPENDENCIES:
  * <ul>
@@ -25,7 +28,7 @@ public class WikiApi {
 	
 	public static void main(String[] args) {
 		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = HttpRequest.newBuilder(URI.create("https://en.wikipedia.org/w/api.php?action=query&format=json&prop=links&titles=Salt%20Lake%20Community%20College&plnamespace=0&pllimit=500&pltitles=")).build();
+		HttpRequest request = HttpRequest.newBuilder(URI.create("https://en.wikipedia.org/w/api.php?action=query&format=json&prop=links&titles=Salt%20Lake%20Community%20College&plnamespace=0&pllimit=10&pltitles=")).build();
 		client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
 			.thenApply(HttpResponse::body)
 			.thenApply(WikiApi::parse)
@@ -33,7 +36,7 @@ public class WikiApi {
 	}
 	
 	/**
-	 * Parses data to JSON and returns Node
+	 * Parses data to JSON and updates routes.txt
 	 * @param responseBody
 	 * @return
 	 */
@@ -64,12 +67,23 @@ public class WikiApi {
 			linksArray.add(title);
 		}
 		
-		System.out.println("Adding new node: " + pageTitle);
-		System.out.println("\nBranches of new node: ");
+		String filename  = "src/src/Resources/routes.txt";
+		Out filePrint = new Out(filename);
+		
+//		System.out.println("Adding new node: " + pageTitle);
+//		System.out.println("\nBranches of new node: ");
 		for(String el : linksArray) {
-			System.out.println("   " + el);
+			//System.out.println("   " + el);
+			filePrint.println(pageTitle + "/" + el);
 		}
-		return new Node(pageTitle, linksArray, null);
+		
+		SymbolGraph graph = new SymbolGraph(filename, "/");
+		for(int el : graph.graph().adj(2)) {
+			System.out.println(graph.nameOf(el));
+		}
+		
+		
+		return null; //TODO
 	}
 
 }
