@@ -1,4 +1,4 @@
-package src;
+package teamProject;
 
 import java.awt.EventQueue;
 import javax.swing.JFrame;
@@ -9,21 +9,19 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.WindowConstants;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
-/**
- * Represents the Graphical User Interface for the wikipedia project.
- *
- * @author Mohamad Hajj + Austin Fashimpaur
- */
-public class GUI {
+public class GUI extends JFrame{
 
 	private JFrame frame;
+	private JTextField txtEnterStateName;
+	private JTextField txtEnterSecondState;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		JFrame frame = new JFrame("Red Counter");
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -50,13 +48,13 @@ public class GUI {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 600, 350);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		
 		JPanel panel = new JPanel();
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
-
-		JButton btnNewButton = new JButton("Run");
+		
+		JButton btnNewButton = new JButton("Search");
 		btnNewButton.setFocusPainted(false);
-		btnNewButton.setBounds(386, 154, 60, 30);
+		btnNewButton.setBounds(358, 121, 78, 30);
 		panel.setLayout(null);
 	    panel.add(btnNewButton);
 	    panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -69,5 +67,19 @@ public class GUI {
 			}
 		});
 		panel.add(btnNewButton);
+		
+		txtEnterStateName = new JTextField();
+		txtEnterStateName.setHorizontalAlignment(SwingConstants.CENTER);	
+//		txtEnterStateName.setText("Enter First State");
+		txtEnterStateName.setBounds(345, 21, 111, 30);
+		panel.add(txtEnterStateName);
+		txtEnterStateName.setColumns(10);
+		
+		txtEnterSecondState = new JTextField();
+		txtEnterSecondState.setHorizontalAlignment(SwingConstants.CENTER);
+//		txtEnterSecondState.setText("Enter Second State");
+		txtEnterSecondState.setBounds(345, 61, 111, 30);
+		panel.add(txtEnterSecondState);
+		txtEnterSecondState.setColumns(10);	
 	}
 }
