@@ -11,12 +11,22 @@ import javax.swing.WindowConstants;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import java.awt.CardLayout;
+import java.awt.Font;
+import javax.swing.JLabel;
+import javax.swing.ImageIcon;
+import java.awt.Color;
 
 public class GUI extends JFrame{
 
 	private JFrame frame;
-	private JTextField txtEnterStateName;
-	private JTextField txtEnterSecondState;
+	private JPanel IntroScreen;
+	private JTextField source;
+	private JLabel lblLogo;
+	private JTextField destination;
+	private JButton btnSearch;
+	private JLabel lblNewLabel;
+	private JLabel lblDestination;
 
 	/**
 	 * Launch the application.
@@ -48,38 +58,47 @@ public class GUI extends JFrame{
 		frame = new JFrame();
 		frame.setBounds(100, 100, 600, 350);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		JPanel panel = new JPanel();
-		frame.getContentPane().add(panel, BorderLayout.CENTER);
-		
-		JButton btnNewButton = new JButton("Search");
-		btnNewButton.setFocusPainted(false);
-		btnNewButton.setBounds(358, 121, 78, 30);
-		panel.setLayout(null);
-	    panel.add(btnNewButton);
-	    panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 	    frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-	    frame.getContentPane().add(panel);
-	    frame.setSize(500, 300);
+	    frame.setSize(684, 420);
+	    frame.getContentPane().setLayout(new CardLayout(0, 0));
+	    
+	    IntroScreen = new JPanel();
+	    IntroScreen.setBackground(Color.WHITE);
+	    frame.getContentPane().add(IntroScreen, "name_1149608370375900");
+	    IntroScreen.setLayout(null);
+	    
+	    source = new JTextField();
+	    source.setToolTipText("");
+	    source.setFont(new Font("Tahoma", Font.PLAIN, 20));
+	    source.setBounds(224, 175, 270, 40);
+	    IntroScreen.add(source);
+	    source.setColumns(10);
+	    
+	    lblLogo = new JLabel("");
+	    lblLogo.setIcon(new ImageIcon(GUI.class.getResource("/src/resources/logo.png")));
+	    lblLogo.setBounds(261, 11, 152, 144);
+	    IntroScreen.add(lblLogo);
+	    
+	    destination = new JTextField();
+	    destination.setFont(new Font("Tahoma", Font.PLAIN, 20));
+	    destination.setColumns(10);
+	    destination.setBounds(224, 244, 270, 40);
+	    IntroScreen.add(destination);
+	    
+	    btnSearch = new JButton("Search");
+	    btnSearch.setFont(new Font("Yu Gothic UI", Font.BOLD, 20));
+	    btnSearch.setBounds(290, 308, 102, 42);
+	    IntroScreen.add(btnSearch);
+	    
+	    lblNewLabel = new JLabel("Source:");
+	    lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+	    lblNewLabel.setBounds(130, 179, 67, 30);
+	    IntroScreen.add(lblNewLabel);
+	    
+	    lblDestination = new JLabel("Destination:");
+	    lblDestination.setFont(new Font("Tahoma", Font.PLAIN, 20));
+	    lblDestination.setBounds(92, 248, 111, 30);
+	    IntroScreen.add(lblDestination);
 	    frame.setVisible(true);
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		panel.add(btnNewButton);
-		
-		txtEnterStateName = new JTextField();
-		txtEnterStateName.setHorizontalAlignment(SwingConstants.CENTER);	
-//		txtEnterStateName.setText("Enter First State");
-		txtEnterStateName.setBounds(345, 21, 111, 30);
-		panel.add(txtEnterStateName);
-		txtEnterStateName.setColumns(10);
-		
-		txtEnterSecondState = new JTextField();
-		txtEnterSecondState.setHorizontalAlignment(SwingConstants.CENTER);
-//		txtEnterSecondState.setText("Enter Second State");
-		txtEnterSecondState.setBounds(345, 61, 111, 30);
-		panel.add(txtEnterSecondState);
-		txtEnterSecondState.setColumns(10);	
 	}
 }
