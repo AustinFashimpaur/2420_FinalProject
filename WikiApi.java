@@ -35,39 +35,35 @@ public class WikiApi {
 	static int count = 0;
 	static int totalCount = 0;
 	static ArrayList<String> searchedPages = new ArrayList<>();
+	static ArrayList<String> pathTo = new ArrayList<>();
 
-	public static void main(String[] args) {
-		String baseURL = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=links&titles=Salt%20Lake%20Community%20College&plnamespace=0&pllimit=5&pltitles=";
+	public static ArrayList<String> findPath(String source, String destination, int linksPerPage) {
+		String sourceURL = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=links&titles="
+				+ source.replaceAll(" ", "%20") + "&plnamespace=0&pllimit=" + linksPerPage + "&pltitles=";
+
 		client = HttpClient.newHttpClient();
-		request = HttpRequest.newBuilder(URI.create(baseURL)).build();
+		request = HttpRequest.newBuilder(URI.create(sourceURL)).build();
 		client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
 		.thenApply(HttpResponse::body)
 		.thenApply(WikiApi::parse)
 		.join();
-		
+
 		SymbolGraph graph = new SymbolGraph(filename, "/");
-		System.out.println();
-		
-		System.out.println("vertex: " + graph.nameOf(8));
-		for(Integer el : graph.graph().adj(2)) {
-			System.out.println(graph.nameOf(el));
-		}
-		
-		System.out.println();
+
 		BreadthFirstPaths bfs = new BreadthFirstPaths(graph.graph(), 0);
-		System.out.println("Does " + graph.nameOf(11) + " have a path to " + graph.nameOf(0) + "?");
-		System.out.println(bfs.hasPathTo(11));
-		
-		Iterator<Integer> pathToIterator = bfs.pathTo(11).iterator();
-		while (pathToIterator.hasNext()) {
-			int w = pathToIterator.next();
-			if (pathToIterator.hasNext()) {
-				System.out.print(graph.nameOf(w) + "..");
-			} else {
-				System.out.print(graph.nameOf(w));
+		System.out.println("Does " + source + " have a path to " + destination + "?");
+		if(graph.contains(destination)) {
+			System.out.println(bfs.hasPathTo(graph.indexOf(destination)));
+			Iterator<Integer> pathToIterator = bfs.pathTo(graph.indexOf(destination)).iterator();
+			while (pathToIterator.hasNext()) {
+				int w = pathToIterator.next();
+				pathTo.add(graph.nameOf(w));
 			}
+		} else {
+			System.out.println("It does not!");
 		}
 
+		return pathTo;
 	}
 
 	/**
@@ -75,7 +71,7 @@ public class WikiApi {
 	 * @param responseBody
 	 * @return
 	 */
-	public static Node parse(String responseBody) {
+	public static Validate parse(String responseBody) {
 		//TODO create system to keep track of parent nodes (recursive?)
 		ArrayList<String> linksArray = new ArrayList<>();
 		count++;
@@ -84,10 +80,8 @@ public class WikiApi {
 				.getJSONObject("pages")
 				.keySet().toArray();
 
-		System.out.println("pageId[0].toString(): " + pageId[0].toString());
-		if(!pageId[0].toString().equalsIgnoreCase("-1") && !searchedPages.contains(pageId[0].toString()) && count < 4) {
+		if(!pageId[0].toString().equalsIgnoreCase("-1") && !searchedPages.contains(pageId[0].toString()) && count < 3) {
 			searchedPages.add(pageId[0].toString());
-			System.out.println(searchedPages);
 			JSONArray linksJSON = new JSONObject(responseBody)
 					.getJSONObject("query")
 					.getJSONObject("pages")
@@ -106,20 +100,19 @@ public class WikiApi {
 				linksArray.add(title);
 			}
 
-			
-				for(String el : linksArray) {
-					filePrint.println(pageTitle + "/" + el);
-					
-					String recursiveURL = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=links&titles="
-							+ el.replaceAll(" ", "%20") + "&plnamespace=0&pllimit=5&pltitles=";
-					System.out.println("I'm going to: " + recursiveURL);
-					
-					request = HttpRequest.newBuilder(URI.create(recursiveURL)).build();
-					client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-					.thenApply(HttpResponse::body)
-					.thenApply(WikiApi::parse)
-					.join();
-				}
+
+			for(String el : linksArray) {
+				filePrint.println(pageTitle + "/" + el);
+
+				String recursiveURL = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=links&titles="
+						+ el.replaceAll(" ", "%20") + "&plnamespace=0&pllimit=3&pltitles=";
+
+				request = HttpRequest.newBuilder(URI.create(recursiveURL)).build();
+				client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+				.thenApply(HttpResponse::body)
+				.thenApply(WikiApi::parse)
+				.join();
+			}
 		}
 		count--;
 
